@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>TrieSuite — Interactive DSA Dashboard</title>
+  <link rel="stylesheet" href="demo.css">
+</head>
+<body>
+
+<header>
+  <h1>Trie<span>Suite</span></h1>
+  <p>One data structure. Four real-world applications.</p>
+  <div class="badges">
+    <span class="badge" style="border-color:#00d4ff;color:#00d4ff">Trie</span>
+    <span class="badge" style="border-color:#10b981;color:#10b981">Aho-Corasick</span>
+    <span class="badge" style="border-color:#f97316;color:#f97316">Binary Trie · LPM</span>
+    <span class="badge" style="border-color:#a855f7;color:#a855f7">Segment Trie</span>
+    <span class="badge" style="border-color:#6b7280;color:#6b7280">Python · DSA Project</span>
+  </div>
+</header>
+
+<div class="tabs">
+  <button class="tab active" data-tab="0">🔤 Autocomplete</button>
+  <button class="tab" data-tab="1">🧬 DNA Matcher</button>
+  <button class="tab" data-tab="2">🌐 IP Routing</button>
+  <button class="tab" data-tab="3">🔗 URL Routing</button>
+</div>
+
+<!-- ── PANEL 0: AUTOCOMPLETE ─────────────────────────────────────────── -->
+<div class="panel active" id="panel0">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(0,212,255,.12);color:#00d4ff">🔤</div>
+    <div class="section-title">
+      <h2>Trie Autocomplete Engine</h2>
+      <p>Prefix search O(L+K) · Levenshtein fuzzy search · 160-word dictionary</p>
+    </div>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <h3>Search</h3>
+      <div class="toggle-row">
+        <button class="toggle" id="toggleFuzzy"></button>
+        <span id="fuzzyLabel">Fuzzy OFF</span>
+        <span style="margin-left:auto;font-size:.75rem;color:var(--muted)">Edit distance ≤ 1</span>
+      </div>
+      <label>Type a prefix</label>
+      <input type="text" id="acInput" placeholder="e.g. app, bat, dr…" autocomplete="off" autofocus>
+      <div style="margin-top:10px;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:.78rem;color:var(--muted)">160 words loaded · real-time</span>
+        <span id="acCount" style="font-size:.78rem;color:#00d4ff;font-weight:500"></span>
+      </div>
+      <div style="margin-top:16px;padding:12px;background:rgba(0,212,255,.05);border-radius:10px;border:1px solid rgba(0,212,255,.1)">
+        <div style="font-size:.75rem;color:var(--muted);margin-bottom:6px">HOW IT WORKS</div>
+        <div style="font-size:.8rem;line-height:1.6">Trie traverses character-by-character to the prefix node, then collects all words in that subtree via DFS. <b style="color:#00d4ff">O(L + K)</b> vs. list scan <b>O(n·L)</b>.</div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Suggestions</h3>
+      <div id="acResults"><div class="empty">Start typing on the left…</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── PANEL 1: DNA ───────────────────────────────────────────────────── -->
+<div class="panel" id="panel1">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(16,185,129,.12);color:#10b981">🧬</div>
+    <div class="section-title">
+      <h2>DNA Pattern Matching — Aho-Corasick</h2>
+      <p>Multi-pattern search in O(n+m) · single pass · failure links</p>
+    </div>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <h3>Input</h3>
+      <label>DNA Sequence (A, C, G, T only)</label>
+      <textarea id="dnaSeq" rows="3" placeholder="e.g. AGCTGCTATCGTAGCTAGTTTGCGT">AGCTGCTATCGTAGCTAGTTTGCGT</textarea>
+      <label>Patterns (comma or newline separated)</label>
+      <textarea id="dnaPatterns" rows="3" placeholder="e.g. AGCT, CGT, TTG">AGCT, CGT, TTG, GCTA</textarea>
+      <button class="btn btn-c2" id="dnaRun" style="margin-top:14px;width:100%">▶ Run Aho-Corasick Search</button>
+      <div id="dnaStats" class="stat-row" style="margin-top:14px"></div>
+    </div>
+    <div class="card">
+      <h3>Highlighted Sequence</h3>
+      <div id="seqDisplay" class="seq-display">Hit Run to see results…</div>
+      <div style="margin-top:16px">
+        <h3>Match Table</h3>
+        <div id="matchInfo"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── PANEL 2: IP ROUTING ────────────────────────────────────────────── -->
+<div class="panel" id="panel2">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(249,115,22,.12);color:#f97316">🌐</div>
+    <div class="section-title">
+      <h2>IP Routing — Binary Trie (Longest Prefix Match)</h2>
+      <p>O(32) = O(1) lookup · same algorithm as real routers · CIDR support</p>
+    </div>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <h3>Routing Table</h3>
+      <div id="ipTable"></div>
+      <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">
+        <h3 style="margin-bottom:10px">Add Route</h3>
+        <label>Network Address</label>
+        <input type="text" id="ipNewNet" placeholder="e.g. 192.168.10.0">
+        <label>Subnet Mask</label>
+        <input type="text" id="ipNewMask" placeholder="e.g. 255.255.255.0">
+        <label>Label</label>
+        <input type="text" id="ipNewLabel" placeholder="e.g. Office-LAN">
+        <button class="btn btn-c3" id="ipAddRoute" style="margin-top:12px">+ Add Route</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>IP Lookup</h3>
+      <label>Enter IP Address</label>
+      <div class="input-row">
+        <input type="text" id="ipInput" placeholder="e.g. 192.168.1.55" value="192.168.1.55">
+        <button class="btn btn-c3" id="ipLookup">Lookup</button>
+      </div>
+      <div id="ipResult" style="margin-top:10px"></div>
+      <div style="margin-top:20px;padding:12px;background:rgba(249,115,22,.05);border-radius:10px;border:1px solid rgba(249,115,22,.1)">
+        <div style="font-size:.75rem;color:var(--muted);margin-bottom:6px">HOW IT WORKS</div>
+        <div style="font-size:.8rem;line-height:1.6">IPv4 = 32 bits → binary Trie depth 32. Walk bits left-to-right, track the last node with a route. The deepest match wins — this is <b style="color:#f97316">Longest Prefix Match</b>, used in every real router.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── PANEL 3: URL ROUTING ───────────────────────────────────────────── -->
+<div class="panel" id="panel3">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(168,85,247,.12);color:#a855f7">🔗</div>
+    <div class="section-title">
+      <h2>URL Routing — Segment Trie with Wildcards</h2>
+      <p>:param wildcards · exact > wildcard priority · O(D) match</p>
+    </div>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <h3>Registered Routes</h3>
+      <ul class="route-list" id="urlList"></ul>
+      <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">
+        <h3 style="margin-bottom:10px">Add Route</h3>
+        <label>URL Pattern (:param for wildcards)</label>
+        <input type="text" id="urlNew" placeholder="e.g. /api/:version/users/:id">
+        <label>Handler Name</label>
+        <input type="text" id="urlHandler" placeholder="e.g. get_user">
+        <button class="btn btn-c4" id="urlAdd" style="margin-top:12px">+ Add Route</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Route Matcher</h3>
+      <label>Enter a URL to match</label>
+      <div class="input-row">
+        <input type="text" id="urlInput" placeholder="e.g. /user/42/posts/7" value="/user/42/posts/7">
+        <button class="btn btn-c4" id="urlMatch">Match</button>
+      </div>
+      <div id="urlResult" style="margin-top:10px"></div>
+      <div style="margin-top:20px;padding:12px;background:rgba(168,85,247,.05);border-radius:10px;border:1px solid rgba(168,85,247,.1)">
+        <div style="font-size:.75rem;color:var(--muted);margin-bottom:6px">TRY THESE</div>
+        <div style="font-size:.8rem;line-height:1.9;font-family:var(--mono)">
+          /home<br>/user/42<br>/user/42/posts<br>/user/99/posts/15<br>/shop/electronics<br>/shop/books/python-dsa
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="demo.js"></script>
+</body>
+</html>
