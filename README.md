@@ -3,7 +3,7 @@
 > A Python project demonstrating how one data structure — the **Trie (prefix tree)** — powers four distinct real-world systems: autocomplete, DNA pattern matching, IP routing, and URL routing.
 
 --- 
-
+ 
 ## 📋 Table of Contents
 - [Project Overview](#-project-overview) 
 - [Modules](#-modules)
